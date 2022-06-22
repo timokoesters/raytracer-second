@@ -36,8 +36,10 @@ class RaytracerMain {
         }
 
         // render test image
-        output.printf("P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT); // file header
+        output.printf("P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT); // write file header
+        System.out.printf("\n");
         for (int i = IMAGE_HEIGHT-1; i >= 0; i--) {
+            System.out.printf("\033[1F\033[1G\033[2K"); // go up 1 line and clear it
             System.out.printf("Scanlines remaining: %d\n", i);
             for (int j = 0; j < IMAGE_WIDTH; j++) {
                 double r = (double)j / (IMAGE_WIDTH-1);
@@ -50,7 +52,7 @@ class RaytracerMain {
 
                 // System.out.printf("   i, j: %d %d\n", i, j);
                 // System.out.printf("r, g, b: %f %f %f\n", r, g, b);
-                output.printf("%d %d %d\n", ir, ig, ib);
+                output.printf("%d %d %d\n", ir, ig, ib); // write rendered pixel to file
             }
         }
         output.close(); // close file to ensure correct writing to storage
