@@ -51,4 +51,14 @@ public class Vector {
         double newZ = this.x * that.getY() - this.y * that.getX();
         return new Vector(newX, newY, newZ);
     }
+
+    // Functions
+    public Color toColor() {
+        return new Color(x, y, z);
+    }
+
+    // Utility Functions
+    public static Vector getNew(double x, double y, double z) {
+        return new Vector(x, y, z);
+    }
 }
