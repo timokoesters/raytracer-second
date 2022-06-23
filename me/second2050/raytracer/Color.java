@@ -12,17 +12,9 @@ public class Color {
 
     // functions
     public String getPpmColor() {
-        return new String(String.format("%d %d %d", r, g, b));
+        return new String(String.format("%d %d %d", (int)r, (int)g, (int)b));
     }
     public Vector toVector() {
         return new Vector(r, g, b);
-    }
-
-    // utility functions
-    public Color getRayColor(Ray r) {
-        Vector direction = r.getDirection();
-        double t = 0.5 * (direction.getY() + 1.0);
-        Vector result = (Vector.getNew(1,1,1).multiply(1.0 - t)).add((Vector.getNew(0.5, 0.7, 1.0)).multiply(t));
-        return result.toColor();
     }
 }
