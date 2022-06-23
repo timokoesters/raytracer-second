@@ -12,7 +12,10 @@ public class Color {
 
     // functions
     public String getPpmColor() {
-        return new String(String.format("%d %d %d", (int)r, (int)g, (int)b));
+        int newR = (int)(255.999 * r);
+        int newG = (int)(255.999 * g);
+        int newB = (int)(255.999 * b);
+        return new String(String.format("%d %d %d", newR, newG, newB));
     }
     public Vector toVector() {
         return new Vector(r, g, b);

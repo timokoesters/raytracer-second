@@ -72,7 +72,7 @@ class RaytracerMain {
     private static Color getRayColor(Ray r) {
         Vector direction = r.getDirection();
         double t = 0.5 * (direction.getY() + 1.0);
-        Vector result = (Vector.getNew(1,1,1).multiply(1.0 - t)).add((Vector.getNew(0.5, 0.7, 1.0)).multiply(t));
+        Vector result = (Vector.getNew(1.0,1.0,1.0).multiply(1.0 - t)).add((Vector.getNew(0.5, 0.7, 1.0)).multiply(t));
         return result.toColor();
     }
 }
