@@ -19,8 +19,14 @@ public class Vector {
     public Vector add(Vector that) {
         return new Vector(x + that.getX(), y + that.getY(), z + that.getZ());
     }
+    public Vector add(double that) {
+        return new Vector(x + that, y + that, z + that);
+    }
     public Vector subtract(Vector that) {
         return new Vector(x - that.getX(), y - that.getY(), z - that.getZ());
+    }
+    public Vector subtract(double that) {
+        return new Vector(x - that, y - that, z - that);
     }
     public Vector multiply(Vector that) {
         return new Vector(x * that.getX(), y * that.getY(), z * that.getZ());

@@ -62,17 +62,29 @@ class RaytracerMain {
                 double u = (double)j / (IMAGE_WIDTH - 1);
                 double v = (double)i / (IMAGE_HEIGHT - 1);
                 Ray r = new Ray(origin, lowerLeftCorner.add(hor.multiply(u)).add(vert.multiply(v)).subtract(origin));
-                Color pixelColor = getRayColor(r); // calculate Ray color
+                Color pixelColor = getRayColor(r); // calculate pixel color from ray target
                 output.printf("%s\n", pixelColor.getPpmColor()); // write rendered pixel to file
             }
         }
         output.close(); // close file to ensure correct writing to storage
         return;
     }
+
     private static Color getRayColor(Ray r) {
+        if (hitSphere(new Vector(0, 0, -1), 0.5, r)) {
+            return new Color(0, 0.5, 1);
+        }
         Vector direction = r.getDirection();
         double t = 0.5 * (direction.getY() + 1.0);
         Vector result = (Vector.getNew(1.0,1.0,1.0).multiply(1.0 - t)).add((Vector.getNew(0.5, 0.7, 1.0)).multiply(t));
         return result.toColor();
+    }
+    private static boolean hitSphere(Vector sphereCentre, double radius, Ray r) {
+        Vector originCentre = r.getOrigin().subtract(sphereCentre);
+        double a = r.getDirection().dot(r.getDirection());
+        double b = 2.0 * originCentre.dot(r.getDirection());
+        double c = originCentre.dot(originCentre) - radius*radius;
+        double discriminant = b*b - 4*a*c;
+        return discriminant > 0;
     }
 }
