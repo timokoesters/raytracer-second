@@ -4,8 +4,9 @@ import java.io.*;
 
 class RaytracerMain {
     // global variables
-    static final int IMAGE_WIDTH = 256;
-    static final int IMAGE_HEIGHT = 256;
+    static final double IMAGE_ASPECT_RATIO = 16.0/9.0; // without decimal place it will be 1
+    static final int IMAGE_WIDTH = 1920;
+    static final int IMAGE_HEIGHT = (int)(IMAGE_WIDTH / IMAGE_ASPECT_RATIO);
     static final String OUTPUT_FILE_NAME = "output.ppm";
     public static void main(String[] args) {
         // open file
@@ -35,7 +36,22 @@ class RaytracerMain {
             return;
         }
 
-        // render test image
+        // print image information
+        System.out.printf("Image Dimensions: %dx%d (Aspect Ratio: %f)\n", IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_ASPECT_RATIO);
+        System.out.printf("Output file: %s\n", OUTPUT_FILE_NAME);
+
+        // setup camera
+        double viewportHeight = 2.0;
+        double viewportWidth = IMAGE_ASPECT_RATIO * viewportHeight;
+        double focalLength = 1.0;
+
+        Vector origin = new Vector(0, 0, 0);
+        Vector hor = new Vector(viewportWidth, 0, 0);
+        Vector vert = new Vector(0, viewportHeight, 0);
+        // lowerLeftCorner = origin - hor/2 - vert/2 - Vector(0, 0, focalLength);
+        Vector lowerLeftCorner = origin.subtract(hor.divide(2)).subtract(vert.divide(2)).subtract(new Vector(0, 0, focalLength));
+
+        // render image
         output.printf("P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT); // write file header
         System.out.printf("\n");
         for (int i = IMAGE_HEIGHT-1; i >= 0; i--) {
