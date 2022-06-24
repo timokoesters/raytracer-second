@@ -71,20 +71,27 @@ class RaytracerMain {
     }
 
     private static Color getRayColor(Ray r) {
-        if (hitSphere(new Vector(0, 0, -1), 0.5, r)) {
-            return new Color(0, 0.5, 1);
+        double t = hitSphere(new Vector(0, 0, -1), 0.5, r);
+        if (t > 0.0) {
+            Vector n = r.getTarget().subtract(new Vector(0, 0, -1));
+            n = n.getUnitVector();
+            return new Color(n.getX()+1, n.getY()+1, n.getZ()+1).multiply(0.5).toColor();
         }
         Vector direction = r.getDirection();
-        double t = 0.5 * (direction.getY() + 1.0);
+        t = 0.5 * (direction.getY() + 1.0);
         Vector result = (Vector.getNew(1.0,1.0,1.0).multiply(1.0 - t)).add((Vector.getNew(0.5, 0.7, 1.0)).multiply(t));
         return result.toColor();
     }
-    private static boolean hitSphere(Vector sphereCentre, double radius, Ray r) {
+    private static double hitSphere(Vector sphereCentre, double radius, Ray r) {
         Vector originCentre = r.getOrigin().subtract(sphereCentre);
         double a = r.getDirection().dot(r.getDirection());
         double b = 2.0 * originCentre.dot(r.getDirection());
         double c = originCentre.dot(originCentre) - radius*radius;
         double discriminant = b*b - 4*a*c;
-        return discriminant > 0;
+        if (discriminant < 0) {
+            return -1.0;
+        } else {
+            return ( -b - Math.sqrt(discriminant) ) / (2.0 * a);
+        }
     }
 }
