@@ -58,7 +58,7 @@ public class Vector {
         return new Vector(newX, newY, newZ);
     }
     public double length() {
-        return Math.sqrt(x*x + y*y + z*z);
+        return Math.sqrt(this.dot(this));
     }
 
     // Functions
