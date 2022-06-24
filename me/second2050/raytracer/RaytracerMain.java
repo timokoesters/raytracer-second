@@ -71,12 +71,13 @@ class RaytracerMain {
     }
 
     private static Color getRayColor(Ray r) {
+        // hard coded sphere
         double t = hitSphere(new Vector(0, 0, -1), 0.5, r);
-        if (t > 0.0) {
-            Vector n = r.getTarget().subtract(new Vector(0, 0, -1));
-            n = n.getUnitVector();
+        if (t > 0.0) { // if hitting sphere use it to color the pixel
+            Vector n = r.getTarget().subtract(new Vector(0, 0, -1)).getUnitVector();
             return new Color(n.getX()+1, n.getY()+1, n.getZ()+1).multiply(0.5).toColor();
         }
+
         Vector direction = r.getDirection();
         t = 0.5 * (direction.getY() + 1.0);
         Vector result = (Vector.getNew(1.0,1.0,1.0).multiply(1.0 - t)).add((Vector.getNew(0.5, 0.7, 1.0)).multiply(t));
