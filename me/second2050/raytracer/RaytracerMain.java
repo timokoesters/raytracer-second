@@ -1,6 +1,7 @@
 package me.second2050.raytracer;
 
 import java.io.*;
+import java.util.ArrayList;
 
 class RaytracerMain {
     // global variables
@@ -41,6 +42,11 @@ class RaytracerMain {
         System.out.printf("Image Dimensions: %dx%d (Aspect Ratio: %f)\n", IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_ASPECT_RATIO);
         System.out.printf("Output file: %s\n", OUTPUT_FILE_NAME);
 
+        // setup world
+        Hittables world = new Hittables();
+        world.add(new Sphere(new Vector(0, 0, -1), 0.5));
+        world.add(new Sphere(new Vector(0, -100.5, -1), 100));
+
         // setup camera
         double viewportHeight = 2.0;
         double viewportWidth = IMAGE_ASPECT_RATIO * viewportHeight;
@@ -62,7 +68,7 @@ class RaytracerMain {
                 double u = (double)j / (IMAGE_WIDTH - 1);
                 double v = (double)i / (IMAGE_HEIGHT - 1);
                 Ray r = new Ray(origin, lowerLeftCorner.add(hor.multiply(u)).add(vert.multiply(v)).subtract(origin));
-                Color pixelColor = getRayColor(r); // calculate pixel color from ray target
+                Color pixelColor = getRayColor(r, world); // calculate pixel color from ray target
                 output.printf("%s\n", pixelColor.getPpmColor()); // write rendered pixel to file
             }
         }
@@ -70,29 +76,15 @@ class RaytracerMain {
         return;
     }
 
-    private static Color getRayColor(Ray r) {
-        // hard coded sphere
-        double t = hitSphere(new Vector(0, 0, -1), 0.5, r);
-        if (t > 0.0) { // if hitting sphere use it to color the pixel
-            Vector n = r.getTarget(t).subtract(new Vector(0, 0, -1)).getUnitVector();
-            return new Color(n.getX()+1, n.getY()+1, n.getZ()+1).multiply(0.5).toColor();
+    private static Color getRayColor(Ray r, Hittable object) {
+        HitRecord rec = object.hit(r, 0, Utility.infinity);
+        if (rec.gotHit()) {
+            return new Color(1, 1, 1).add(rec.getNormal()).multiply(0.5).toColor();
         }
 
         Vector direction = r.getDirection();
-        t = 0.5 * (direction.getY() + 1.0);
+        double t = 0.5 * (direction.getY() + 1.0);
         Vector result = (Vector.getNew(1.0,1.0,1.0).multiply(1.0 - t)).add((Vector.getNew(0.5, 0.7, 1.0)).multiply(t));
         return result.toColor();
-    }
-    private static double hitSphere(Vector sphereCentre, double radius, Ray r) {
-        Vector originCentre = r.getOrigin().subtract(sphereCentre);
-        double a = r.getDirection().dot(r.getDirection());
-        double halfB = originCentre.dot(r.getDirection());
-        double c = originCentre.dot(originCentre) - radius*radius;
-        double discriminant = halfB*halfB - a*c;
-        if (discriminant < 0) {
-            return -1.0;
-        } else {
-            return ( -halfB - Math.sqrt(discriminant) ) / a;
-        }
     }
 }
