@@ -19,4 +19,7 @@ public class Ray {
     public Vector getTarget() {
         return origin.add(direction);
     }
+    public Vector getTarget(double t) {
+        return origin.add(direction.multiply(t));
+    }
 }
