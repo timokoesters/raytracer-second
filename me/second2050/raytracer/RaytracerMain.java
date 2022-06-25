@@ -86,13 +86,13 @@ class RaytracerMain {
     private static double hitSphere(Vector sphereCentre, double radius, Ray r) {
         Vector originCentre = r.getOrigin().subtract(sphereCentre);
         double a = r.getDirection().dot(r.getDirection());
-        double b = 2.0 * originCentre.dot(r.getDirection());
+        double halfB = originCentre.dot(r.getDirection());
         double c = originCentre.dot(originCentre) - radius*radius;
-        double discriminant = b*b - 4*a*c;
+        double discriminant = halfB*halfB - a*c;
         if (discriminant < 0) {
             return -1.0;
         } else {
-            return ( -b - Math.sqrt(discriminant) ) / (2.0 * a);
+            return ( -halfB - Math.sqrt(discriminant) ) / a;
         }
     }
 }
