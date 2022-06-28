@@ -32,7 +32,7 @@ class RaytracerMain {
                 file.delete();
             }
             file.createNewFile();
-            output = new PrintWriter(file);
+            output = new PrintWriter(new FileOutputStream(file), false);
         } catch (Exception e) {
             System.out.printf("ERROR: Couldn't create new output file: %s\n", OUTPUT_FILE_NAME);
             e.printStackTrace();
