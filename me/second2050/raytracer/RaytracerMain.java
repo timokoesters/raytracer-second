@@ -1,7 +1,7 @@
 package me.second2050.raytracer;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Random;
 
 class RaytracerMain {
     // global variables
@@ -9,6 +9,8 @@ class RaytracerMain {
     static final int IMAGE_WIDTH = 480;
     static final int IMAGE_HEIGHT = (int)(IMAGE_WIDTH / IMAGE_ASPECT_RATIO);
     static final String OUTPUT_FILE_NAME = "output.ppm";
+    static final int SAMPLES_PER_PIXEL = 100;
+    static final double CAMERA_FOCAL_LENGTH = 1.0;
 
     public static void main(String[] args) {
         // open file
@@ -48,15 +50,10 @@ class RaytracerMain {
         world.add(new Sphere(new Vector(0, -100.5, -1), 100));
 
         // setup camera
-        double viewportHeight = 2.0;
-        double viewportWidth = IMAGE_ASPECT_RATIO * viewportHeight;
-        double focalLength = 1.0;
+        Camera cam = new Camera(IMAGE_ASPECT_RATIO, 2.0, CAMERA_FOCAL_LENGTH);
 
-        Vector origin = new Vector(0, 0, 0);
-        Vector hor = new Vector(viewportWidth, 0, 0);
-        Vector vert = new Vector(0, viewportHeight, 0);
-        // lowerLeftCorner = origin - hor/2 - vert/2 - Vector(0, 0, focalLength);
-        Vector lowerLeftCorner = origin.subtract(hor.divide(2)).subtract(vert.divide(2)).subtract(new Vector(0, 0, focalLength));
+        // setup rng for antialiasing
+        Random rand = new Random();
 
         // render image
         output.printf("P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT); // write file header
@@ -65,11 +62,14 @@ class RaytracerMain {
             System.out.printf("\033[1F\033[1G\033[2K"); // go up 1 line and clear it
             System.out.printf("Scanlines remaining: %d\n", i);
             for (int j = 0; j < IMAGE_WIDTH; j++) {
-                double u = (double)j / (IMAGE_WIDTH - 1);
-                double v = (double)i / (IMAGE_HEIGHT - 1);
-                Ray r = new Ray(origin, lowerLeftCorner.add(hor.multiply(u)).add(vert.multiply(v)).subtract(origin));
-                Color pixelColor = getRayColor(r, world); // calculate pixel color from ray target
-                output.printf("%s\n", pixelColor.getPpmColor()); // write rendered pixel to file
+                Color pixelColor = new Color(0, 0, 0);
+                for (int k = 0; k < SAMPLES_PER_PIXEL; k++) {
+                    double u = (j + rand.nextDouble()) / (IMAGE_WIDTH-1);
+                    double v = (i + rand.nextDouble()) / (IMAGE_HEIGHT-1);
+                    Ray r = cam.getRay(u, v);
+                    pixelColor = pixelColor.add(getRayColor(r, world)).toColor();
+                }
+                output.printf("%s\n", pixelColor.getPpmColor(SAMPLES_PER_PIXEL)); // write rendered pixel to file
             }
         }
         output.close(); // close file to ensure correct writing to storage
@@ -77,7 +77,7 @@ class RaytracerMain {
     }
 
     private static Color getRayColor(Ray r, Hittable object) {
-        HitRecord rec = object.hit(r, 0, Utility.infinity);
+        HitRecord rec = object.hit(r, 0, Utility.INFINITY);
         if (rec.gotHit()) {
             return new Color(1, 1, 1).add(rec.getNormal()).multiply(0.5).toColor();
         }

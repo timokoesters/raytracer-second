@@ -17,4 +17,15 @@ public class Color extends Vector {
         int newB = (int)(255.999 * b);
         return new String(String.format("%d %d %d", newR, newG, newB));
     }
+    public String getPpmColor(int samplesPerPixel) {
+        double scale = 1.0 / samplesPerPixel;
+        r *= scale;
+        g *= scale;
+        b *= scale;
+
+        int newR = (int)(256 * Utility.clamp(r, 0.0, 0.999));
+        int newG = (int)(256 * Utility.clamp(g, 0.0, 0.999));
+        int newB = (int)(256 * Utility.clamp(b, 0.0, 0.999));
+        return new String(String.format("%d %d %d", newR, newG, newB));
+    }
 }
