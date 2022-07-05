@@ -19,9 +19,9 @@ public class Color extends Vector {
     }
     public String getPpmColor(int samplesPerPixel) {
         double scale = 1.0 / samplesPerPixel;
-        r *= scale;
-        g *= scale;
-        b *= scale;
+        r = Math.sqrt(scale * r);
+        g = Math.sqrt(scale * g);
+        b = Math.sqrt(scale * b);
 
         int newR = (int)(256 * Utility.clamp(r, 0.0, 0.999));
         int newG = (int)(256 * Utility.clamp(g, 0.0, 0.999));

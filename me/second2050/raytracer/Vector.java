@@ -1,5 +1,7 @@
 package me.second2050.raytracer;
 
+import java.util.Random;
+
 public class Vector {
     private double x, y, z;
 
@@ -72,5 +74,20 @@ public class Vector {
     }
     public Vector getUnitVector() {
         return this.divide(this.length());
+    }
+    public static Vector getRandom() {
+        Random rand = RaytracerMain.RAND;
+        return new Vector(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
+    }
+    public static Vector getRandom(double min, double max) {
+        Random rand = RaytracerMain.RAND;
+        return new Vector(rand.nextDouble(min, max), rand.nextDouble(min, max), rand.nextDouble(min, max));
+    }
+    public static Vector getRandomInUnitSphere() {
+        while (true) {
+            Vector p = Vector.getRandom(-1, 1);
+            if (p.length() * p.length() >= 1) { continue; }
+            return p;
+        }
     }
 }

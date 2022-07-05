@@ -9,8 +9,10 @@ class RaytracerMain {
     static final int IMAGE_WIDTH = 480;
     static final int IMAGE_HEIGHT = (int)(IMAGE_WIDTH / IMAGE_ASPECT_RATIO);
     static final String OUTPUT_FILE_NAME = "output.ppm";
-    static final int SAMPLES_PER_PIXEL = 100;
+    static final int SAMPLES_PER_PIXEL = 50;
     static final double CAMERA_FOCAL_LENGTH = 1.0;
+    static final int MAX_DEPTH = 50;
+    public static final Random RAND = new Random();
 
     public static void main(String[] args) {
         // open file
@@ -32,7 +34,7 @@ class RaytracerMain {
                 file.delete();
             }
             file.createNewFile();
-            output = new PrintWriter(new FileOutputStream(file), false);
+            output = new PrintWriter(new BufferedOutputStream(new FileOutputStream(file), 1024000), false);
         } catch (Exception e) {
             System.out.printf("ERROR: Couldn't create new output file: %s\n", OUTPUT_FILE_NAME);
             e.printStackTrace();
@@ -67,19 +69,24 @@ class RaytracerMain {
                     double u = (j + rand.nextDouble()) / (IMAGE_WIDTH-1);
                     double v = (i + rand.nextDouble()) / (IMAGE_HEIGHT-1);
                     Ray r = cam.getRay(u, v);
-                    pixelColor = pixelColor.add(getRayColor(r, world)).toColor();
+                    pixelColor = pixelColor.add(getRayColor(r, world, MAX_DEPTH)).toColor();
                 }
                 output.printf("%s\n", pixelColor.getPpmColor(SAMPLES_PER_PIXEL)); // write rendered pixel to file
             }
         }
+        output.flush();
         output.close(); // close file to ensure correct writing to storage
         return;
     }
 
-    private static Color getRayColor(Ray r, Hittable object) {
-        HitRecord rec = object.hit(r, 0, Utility.INFINITY);
+    private static Color getRayColor(Ray r, Hittable object, int depth) {
+        HitRecord rec = object.hit(r, 0.00001, Utility.INFINITY);
+
+        if (depth <= 0) { return new Color(0, 0, 0); }
+
         if (rec.gotHit()) {
-            return new Color(1, 1, 1).add(rec.getNormal()).multiply(0.5).toColor();
+            Vector target = rec.getPos().add(rec.getNormal()).add(Vector.getRandomInUnitSphere());
+            return getRayColor(new Ray(rec.getPos(), target.subtract(rec.getPos())), object, depth-1).multiply(0.5).toColor();
         }
 
         Vector direction = r.getDirection();
