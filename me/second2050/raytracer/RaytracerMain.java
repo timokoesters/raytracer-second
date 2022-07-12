@@ -80,12 +80,12 @@ class RaytracerMain {
     }
 
     private static Color getRayColor(Ray r, Hittable object, int depth) {
-        HitRecord rec = object.hit(r, 0.00001, Utility.INFINITY);
+        HitRecord rec = object.hit(r, 0.001, Utility.INFINITY);
 
         if (depth <= 0) { return new Color(0, 0, 0); }
 
         if (rec.gotHit()) {
-            Vector target = rec.getPos().add(rec.getNormal()).add(Vector.getRandomInUnitSphere());
+            Vector target = rec.getPos().add(rec.getNormal()).add(Vector.getRandomUnitVector());
             return getRayColor(new Ray(rec.getPos(), target.subtract(rec.getPos())), object, depth-1).multiply(0.5).toColor();
         }
 

@@ -90,4 +90,7 @@ public class Vector {
             return p;
         }
     }
+    public static Vector getRandomUnitVector() {
+        return Vector.getRandomInUnitSphere().getUnitVector();
+    }
 }
