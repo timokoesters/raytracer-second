@@ -85,7 +85,7 @@ class RaytracerMain {
         if (depth <= 0) { return new Color(0, 0, 0); }
 
         if (rec.gotHit()) {
-            Vector target = rec.getPos().add(rec.getNormal()).add(Vector.getRandomUnitVector());
+            Vector target = rec.getPos().add(Vector.getRandomInHemisphere(rec.getNormal()));
             return getRayColor(new Ray(rec.getPos(), target.subtract(rec.getPos())), object, depth-1).multiply(0.5).toColor();
         }
 
