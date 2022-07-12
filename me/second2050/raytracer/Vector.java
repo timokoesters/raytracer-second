@@ -62,10 +62,17 @@ public class Vector {
     public double length() {
         return Math.sqrt(this.dot(this));
     }
+    public Vector reflect(Vector that) {
+        return this.subtract(that.multiply(2 * this.dot(that)));
+    }
 
     // Functions
     public Color toColor() {
         return new Color(x, y, z);
+    }
+    public boolean nearZero() {
+        double s = 1e-8;
+        return (Math.abs(this.x) < s) && (Math.abs(this.y) < s) && (Math.abs(this.z) < s);
     }
 
     // Utility Functions
@@ -92,5 +99,10 @@ public class Vector {
     }
     public static Vector getRandomUnitVector() {
         return Vector.getRandomInUnitSphere().getUnitVector();
+    }
+    public static Vector getRandomInHemisphere(Vector normal) {
+        Vector inUnitSphere = Vector.getRandomInUnitSphere();
+        if (inUnitSphere.dot(normal) > 0.0) { return inUnitSphere; }
+        else { return inUnitSphere.multiply(-1); }
     }
 }

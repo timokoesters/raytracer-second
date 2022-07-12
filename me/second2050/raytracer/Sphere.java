@@ -3,11 +3,13 @@ package me.second2050.raytracer;
 public class Sphere extends Hittable {
     private Vector center;
     private double radius;
+    private Material material;
 
     // Constructor
-    public Sphere(Vector center, double radius) {
+    public Sphere(Vector center, double radius, Material material) {
         this.center = center;
         this.radius = radius;
+        this.material = material;
     }
 
     // Getter Functions
@@ -16,6 +18,9 @@ public class Sphere extends Hittable {
     }
     public double getRadius() {
         return radius;
+    }
+    public Material getMaterial() {
+        return material;
     }
 
     @Override
@@ -40,10 +45,9 @@ public class Sphere extends Hittable {
         double recT = root;
         Vector recP = r.getTarget(recT);
         Vector recN = recP.subtract(center).divide(radius);
-        HitRecord result = new HitRecord(recP, recN, recT);
+        HitRecord result = new HitRecord(recP, recN, recT, material);
         result.setFaceNormal(r, recN);
 
         return result;
-
     }
 }

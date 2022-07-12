@@ -48,8 +48,16 @@ class RaytracerMain {
 
         // setup world
         Hittables world = new Hittables();
-        world.add(new Sphere(new Vector(0, 0, -1), 0.5));
-        world.add(new Sphere(new Vector(0, -100.5, -1), 100));
+
+        Material materialGround = new LambertianMaterial(new Color(0.8, 0.8, 0.0));
+        Material materialCenter = new LambertianMaterial(new Color(0.7, 0.3, 0.3));
+        Material materialLeft   = new MetalMaterial(new Color(0.8, 0.8, 0.8));
+        Material materialRight  = new MetalMaterial(new Color(0.8, 0.6, 0.2));
+
+        world.add(new Sphere(new Vector(0.0, -100.5, -1.0), 100.0, materialGround));
+        world.add(new Sphere(new Vector(0.0, 0.0, -1.0), 0.5, materialCenter));
+        world.add(new Sphere(new Vector(-1.0, 0.0, -1.0), 0.5, materialLeft));
+        world.add(new Sphere(new Vector(1.0, 0.0, -1.0), 0.5, materialRight));
 
         // setup camera
         Camera cam = new Camera(IMAGE_ASPECT_RATIO, 2.0, CAMERA_FOCAL_LENGTH);
@@ -85,8 +93,11 @@ class RaytracerMain {
         if (depth <= 0) { return new Color(0, 0, 0); }
 
         if (rec.gotHit()) {
-            Vector target = rec.getPos().add(Vector.getRandomInHemisphere(rec.getNormal()));
-            return getRayColor(new Ray(rec.getPos(), target.subtract(rec.getPos())), object, depth-1).multiply(0.5).toColor();
+            Ray scattered = null;
+            Color attenuation = null;
+            if (rec.getMaterial().scatter(r, rec, attenuation, scattered)) {
+                return attenuation.multiply(getRayColor(scattered, object, depth-1)).toColor();
+            }
         }
 
         Vector direction = r.getDirection();

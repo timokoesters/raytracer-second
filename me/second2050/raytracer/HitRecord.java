@@ -6,13 +6,15 @@ public class HitRecord {
     private Vector normal;
     private double t;
     private boolean frontFace;
+    private Material material;
 
     // Constructor
-    public HitRecord(Vector pos, Vector normal, double t) {
+    public HitRecord(Vector pos, Vector normal, double t, Material material) {
         this.hit = true;
         this.pos = pos;
         this.normal = normal;
         this.t = t;
+        this.material = material;
     }
     public HitRecord() {
         this.hit = false;
@@ -30,6 +32,9 @@ public class HitRecord {
     }
     public double getT() {
         return t;
+    }
+    public Material getMaterial() {
+        return material;
     }
 
     // Other Functions
