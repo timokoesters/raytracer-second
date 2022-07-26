@@ -51,8 +51,8 @@ class RaytracerMain {
 
         Material materialGround = new LambertianMaterial(new Color(0.8, 0.8, 0.0));
         Material materialCenter = new LambertianMaterial(new Color(0.7, 0.3, 0.3));
-        Material materialLeft   = new MetalMaterial(new Color(0.8, 0.8, 0.8));
-        Material materialRight  = new MetalMaterial(new Color(0.8, 0.6, 0.2));
+        Material materialLeft   = new MetalMaterial(new Color(0.8, 0.8, 0.8), 0.3);
+        Material materialRight  = new MetalMaterial(new Color(0.8, 0.6, 0.2), 1.0);
 
         world.add(new Sphere(new Vector(0.0, -100.5, -1.0), 100.0, materialGround));
         world.add(new Sphere(new Vector(0.0, 0.0, -1.0), 0.5, materialCenter));
@@ -93,14 +93,15 @@ class RaytracerMain {
         if (depth <= 0) { return new Color(0, 0, 0); }
 
         if (rec.gotHit()) {
-            Ray scattered = r;
-            Color attenuation = new Color(0, 0, 0);
+            Ray scattered = null;
+            Color attenuation = new Color(1, 1, 1);
             ScatterResult scatterResult = rec.getMaterial().scatter(r, rec, attenuation, scattered);
             if (scatterResult.result) {
                 scattered = scatterResult.scattered;
                 attenuation = scatterResult.attenuation;
                 return attenuation.multiply(getRayColor(scattered, object, depth-1)).toColor();
             }
+            return new Color(0, 0, 0);
         }
 
         Vector direction = r.getDirection();
