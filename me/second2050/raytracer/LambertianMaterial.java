@@ -13,7 +13,7 @@ public class LambertianMaterial extends Material {
     }
 
     @Override
-    public boolean scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered) {
+    public ScatterResult scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered) {
         Vector scatterDirection = rec.getNormal().add(Vector.getRandomUnitVector());
 
         // catch degenerate scatter direction
@@ -21,7 +21,7 @@ public class LambertianMaterial extends Material {
 
         scattered = new Ray(rec.getPos(), scatterDirection);
         attenuation = albedo;
-        return true;
+        return new ScatterResult(true, scattered, attenuation);
     }
     
 }

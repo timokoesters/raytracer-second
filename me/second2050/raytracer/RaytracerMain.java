@@ -93,9 +93,12 @@ class RaytracerMain {
         if (depth <= 0) { return new Color(0, 0, 0); }
 
         if (rec.gotHit()) {
-            Ray scattered = null;
-            Color attenuation = null;
-            if (rec.getMaterial().scatter(r, rec, attenuation, scattered)) {
+            Ray scattered = r;
+            Color attenuation = new Color(0, 0, 0);
+            ScatterResult scatterResult = rec.getMaterial().scatter(r, rec, attenuation, scattered);
+            if (scatterResult.result) {
+                scattered = scatterResult.scattered;
+                attenuation = scatterResult.attenuation;
                 return attenuation.multiply(getRayColor(scattered, object, depth-1)).toColor();
             }
         }

@@ -8,11 +8,11 @@ public class MetalMaterial extends Material {
     }
 
     @Override
-    public boolean scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered) {
+    public ScatterResult scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered) {
         Vector reflected = in.getDirection().getUnitVector().reflect(rec.getNormal());
         scattered = new Ray(rec.getPos(), reflected);
         attenuation = albedo;
-        return scattered.getDirection().dot(rec.getNormal()) > 0;
+        return new ScatterResult(scattered.getDirection().dot(rec.getNormal()) > 0, scattered, attenuation);
     }
     
 }
