@@ -65,6 +65,12 @@ public class Vector {
     public Vector reflect(Vector that) {
         return this.subtract(that.multiply(2 * this.dot(that)));
     }
+    public Vector refract(Vector that, double etaiOverEtat) {
+        double cosTheta = Math.min(this.multiply(-1).dot(that), 1.0);
+        Vector rOutPerp = this.add(that.multiply(cosTheta)).multiply(etaiOverEtat);
+        Vector rOutParallel = that.multiply(-Math.sqrt(Math.abs(1.0 - (rOutPerp.length() * rOutPerp.length()))));
+        return rOutPerp.add(rOutParallel);
+    }
 
     // Functions
     public Color toColor() {

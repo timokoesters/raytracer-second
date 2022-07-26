@@ -36,6 +36,9 @@ public class HitRecord {
     public Material getMaterial() {
         return material;
     }
+    public boolean getFrontFace() {
+        return frontFace;
+    }
 
     // Other Functions
     public void setFaceNormal(Ray r, Vector outwardNormal) {

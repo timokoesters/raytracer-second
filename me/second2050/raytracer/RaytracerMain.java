@@ -6,7 +6,7 @@ import java.util.Random;
 class RaytracerMain {
     // global variables
     static final double IMAGE_ASPECT_RATIO = 16.0/9.0; // without decimal place it will be 1
-    static final int IMAGE_WIDTH = 480;
+    static final int IMAGE_WIDTH = 960;
     static final int IMAGE_HEIGHT = (int)(IMAGE_WIDTH / IMAGE_ASPECT_RATIO);
     static final String OUTPUT_FILE_NAME = "output.ppm";
     static final int SAMPLES_PER_PIXEL = 50;
@@ -50,7 +50,7 @@ class RaytracerMain {
         Hittables world = new Hittables();
 
         Material materialGround = new LambertianMaterial(new Color(0.8, 0.8, 0.0));
-        Material materialCenter = new LambertianMaterial(new Color(0.7, 0.3, 0.3));
+        Material materialCenter = new DielectricMaterial(1.5);
         Material materialLeft   = new MetalMaterial(new Color(0.8, 0.8, 0.8), 0.3);
         Material materialRight  = new MetalMaterial(new Color(0.8, 0.6, 0.2), 1.0);
 
