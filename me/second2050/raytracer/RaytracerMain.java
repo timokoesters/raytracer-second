@@ -6,11 +6,12 @@ import java.util.Random;
 class RaytracerMain {
     // global variables
     static final double IMAGE_ASPECT_RATIO = 16.0/9.0; // without decimal place it will be 1
-    static final int IMAGE_WIDTH = 480;
+    static final int IMAGE_WIDTH = 960;
     static final int IMAGE_HEIGHT = (int)(IMAGE_WIDTH / IMAGE_ASPECT_RATIO);
     static final String OUTPUT_FILE_NAME = "output.ppm";
     static final int SAMPLES_PER_PIXEL = 50;
     static final double CAMERA_FOCAL_LENGTH = 1.0;
+    static final int CAMERA_FIELD_OF_VIEW = 20;
     static final int MAX_DEPTH = 50;
     public static final Random RAND = new Random();
 
@@ -61,7 +62,7 @@ class RaytracerMain {
         world.add(new Sphere(new Vector(1.0, 0.0, -1.0), 0.5, materialRight));
 
         // setup camera
-        Camera cam = new Camera(IMAGE_ASPECT_RATIO, 2.0, 90, CAMERA_FOCAL_LENGTH);
+        Camera cam = new Camera(new Vector(-2, 2, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), IMAGE_ASPECT_RATIO, 2.0, CAMERA_FIELD_OF_VIEW, CAMERA_FOCAL_LENGTH);
 
         // setup rng for antialiasing
         Random rand = new Random();
