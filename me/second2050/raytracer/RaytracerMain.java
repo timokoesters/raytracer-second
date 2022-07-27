@@ -51,11 +51,12 @@ class RaytracerMain {
 
         Material materialGround = new LambertianMaterial(new Color(0.8, 0.8, 0.0));
         Material materialCenter = new DielectricMaterial(1.5);
-        Material materialLeft   = new MetalMaterial(new Color(0.8, 0.8, 0.8), 0.3);
+        Material materialLeft   = new LambertianMaterial(new Color(0.0, 0.5, 1.0));
         Material materialRight  = new MetalMaterial(new Color(0.8, 0.6, 0.2), 1.0);
 
         world.add(new Sphere(new Vector(0.0, -100.5, -1.0), 100.0, materialGround));
-        world.add(new Sphere(new Vector(0.0, 0.0, -1.0), 0.5, materialCenter));
+        world.add(new Sphere(new Vector(0.0, 0.0, -1.0), 0.485, materialCenter));
+        world.add(new Sphere(new Vector(0.0, 0.0, -1.0), -0.475, materialCenter));
         world.add(new Sphere(new Vector(-1.0, 0.0, -1.0), 0.5, materialLeft));
         world.add(new Sphere(new Vector(1.0, 0.0, -1.0), 0.5, materialRight));
 
