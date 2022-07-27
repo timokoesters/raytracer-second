@@ -1,17 +1,20 @@
 package me.second2050.raytracer;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.Random;
+
+import javax.swing.text.NumberFormatter;
 
 class RaytracerMain {
     // global variables
     static final double IMAGE_ASPECT_RATIO = 16.0/9.0; // without decimal place it will be 1
-    static final int IMAGE_WIDTH = 960;
+    static final int IMAGE_WIDTH = 480;
     static final int IMAGE_HEIGHT = (int)(IMAGE_WIDTH / IMAGE_ASPECT_RATIO);
     static final String OUTPUT_FILE_NAME = "output.ppm";
     static final int SAMPLES_PER_PIXEL = 50;
     static final double CAMERA_FOCAL_LENGTH = 1.0;
-    static final int CAMERA_FIELD_OF_VIEW = 20;
+    static final int CAMERA_FIELD_OF_VIEW = 45;
     static final int MAX_DEPTH = 50;
     public static final Random RAND = new Random();
 
@@ -67,6 +70,9 @@ class RaytracerMain {
         // setup rng for antialiasing
         Random rand = new Random();
 
+        // start rendering timer
+        long startTime = System.currentTimeMillis();
+
         // render image
         output.printf("P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT); // write file header
         System.out.printf("\n");
@@ -84,6 +90,11 @@ class RaytracerMain {
                 output.printf("%s\n", pixelColor.getPpmColor(SAMPLES_PER_PIXEL)); // write rendered pixel to file
             }
         }
+
+        // output runtime to user
+        long endTime = System.currentTimeMillis();
+        System.out.printf("Rendering time: %f seconds", (endTime - startTime) / 1000d);
+
         output.flush();
         output.close(); // close file to ensure correct writing to storage
         return;
