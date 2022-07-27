@@ -9,7 +9,7 @@ import javax.swing.text.NumberFormatter;
 class RaytracerMain {
     // global variables
     static final double IMAGE_ASPECT_RATIO = 16.0/9.0; // without decimal place it will be 1
-    static final int IMAGE_WIDTH = 480;
+    static final int IMAGE_WIDTH = 1920;
     static final int IMAGE_HEIGHT = (int)(IMAGE_WIDTH / IMAGE_ASPECT_RATIO);
     static final String OUTPUT_FILE_NAME = "output.ppm";
     static final int SAMPLES_PER_PIXEL = 50;
@@ -55,12 +55,14 @@ class RaytracerMain {
 
         Material materialGround = new LambertianMaterial(new Color(0.8, 0.8, 0.0));
         Material materialCenter = new DielectricMaterial(1.5);
+        Material materialCenter2= new MetalMaterial(new Color(1.0, 0.0, 0.5), 0.25);
         Material materialLeft   = new LambertianMaterial(new Color(0.0, 0.5, 1.0));
-        Material materialRight  = new MetalMaterial(new Color(0.8, 0.6, 0.2), 1.0);
+        Material materialRight  = new MetalMaterial(new Color(0.8, 0.6, 0.2), 0.25);
 
         world.add(new Sphere(new Vector(0.0, -100.5, -1.0), 100.0, materialGround));
         world.add(new Sphere(new Vector(0.0, 0.0, -1.0), 0.485, materialCenter));
         world.add(new Sphere(new Vector(0.0, 0.0, -1.0), -0.475, materialCenter));
+        world.add(new Sphere(new Vector(0.0, 0.0, -1.0), 0.25, materialCenter2));
         world.add(new Sphere(new Vector(-1.0, 0.0, -1.0), 0.5, materialLeft));
         world.add(new Sphere(new Vector(1.0, 0.0, -1.0), 0.5, materialRight));
 
