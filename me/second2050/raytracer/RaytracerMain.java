@@ -9,7 +9,7 @@ import javax.swing.text.NumberFormatter;
 class RaytracerMain {
     // global variables
     static final double IMAGE_ASPECT_RATIO = 16.0/9.0; // without decimal place it will be 1
-    static final int IMAGE_WIDTH = 1920;
+    static final int IMAGE_WIDTH = 320;
     static final int IMAGE_HEIGHT = (int)(IMAGE_WIDTH / IMAGE_ASPECT_RATIO);
     static final String OUTPUT_FILE_NAME = "output.ppm";
     static final int SAMPLES_PER_PIXEL = 50;
@@ -78,20 +78,21 @@ class RaytracerMain {
         // render image
         output.printf("P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT); // write file header
         System.out.printf("\n");
-        for (int i = IMAGE_HEIGHT-1; i >= 0; i--) {
-            System.out.printf("\033[1F\033[1G\033[2K"); // go up 1 line and clear it
-            System.out.printf("Scanlines remaining: %d\n", i);
-            for (int j = 0; j < IMAGE_WIDTH; j++) {
-                Color pixelColor = new Color(0, 0, 0);
-                for (int k = 0; k < SAMPLES_PER_PIXEL; k++) {
-                    double u = (j + rand.nextDouble()) / (IMAGE_WIDTH-1);
-                    double v = (i + rand.nextDouble()) / (IMAGE_HEIGHT-1);
-                    Ray r = cam.getRay(u, v);
-                    pixelColor = pixelColor.add(getRayColor(r, world, MAX_DEPTH)).toColor();
-                }
-                output.printf("%s\n", pixelColor.getPpmColor(SAMPLES_PER_PIXEL)); // write rendered pixel to file
-            }
+        Renderer[] renderers = new Renderer[2];
+        for (int i = 0; i < renderers.length; i++) {
+            renderers[i] = new Renderer(100, 120);
+            renderers[i].start();
         }
+        for (int i = 0; i < renderers.length; i++) {
+            try {
+                renderers[i].join();
+            } catch (Exception e) {
+                e.printStacktrace();
+                System.exit(100);
+            }
+            output.printf("%s", renderers[i].getResult());
+        }
+
 
         // output runtime to user
         long endTime = System.currentTimeMillis();
