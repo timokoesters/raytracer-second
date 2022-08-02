@@ -1,5 +1,7 @@
 package me.second2050.raytracer;
 
+import java.util.Random;
+
 public class DielectricMaterial extends Material {
     double refractionIndex;
 
@@ -8,7 +10,7 @@ public class DielectricMaterial extends Material {
     }
 
     @Override
-    public ScatterResult scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered) {
+    public ScatterResult scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered, Random rand) {
         attenuation = new Color(1, 1, 1);
         double refractionRatio = rec.getFrontFace() ? (1.0/refractionIndex) : refractionIndex;
 

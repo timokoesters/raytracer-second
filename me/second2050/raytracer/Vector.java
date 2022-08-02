@@ -88,26 +88,24 @@ public class Vector {
     public Vector getUnitVector() {
         return this.divide(this.length());
     }
-    public static Vector getRandom() {
-        Random rand = RaytracerMain.RAND;
+    public static Vector getRandom(Random rand) {
         return new Vector(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
     }
-    public static Vector getRandom(double min, double max) {
-        Random rand = RaytracerMain.RAND;
+    public static Vector getRandom(double min, double max, Random rand) {
         return new Vector(rand.nextDouble(min, max), rand.nextDouble(min, max), rand.nextDouble(min, max));
     }
-    public static Vector getRandomInUnitSphere() {
+    public static Vector getRandomInUnitSphere(Random rand) {
         while (true) {
-            Vector p = Vector.getRandom(-1, 1);
+            Vector p = Vector.getRandom(-1, 1, rand);
             if (p.length() * p.length() >= 1) { continue; }
             return p;
         }
     }
-    public static Vector getRandomUnitVector() {
-        return Vector.getRandomInUnitSphere().getUnitVector();
+    public static Vector getRandomUnitVector(Random rand) {
+        return Vector.getRandomInUnitSphere(rand).getUnitVector();
     }
-    public static Vector getRandomInHemisphere(Vector normal) {
-        Vector inUnitSphere = Vector.getRandomInUnitSphere();
+    public static Vector getRandomInHemisphere(Vector normal, Random rand) {
+        Vector inUnitSphere = Vector.getRandomInUnitSphere(rand);
         if (inUnitSphere.dot(normal) > 0.0) { return inUnitSphere; }
         else { return inUnitSphere.multiply(-1); }
     }

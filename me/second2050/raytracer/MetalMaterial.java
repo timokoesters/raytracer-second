@@ -1,5 +1,7 @@
 package me.second2050.raytracer;
 
+import java.util.Random;
+
 public class MetalMaterial extends Material {
     Color albedo;
     double fuzz;
@@ -14,10 +16,10 @@ public class MetalMaterial extends Material {
     }
 
     @Override
-    public ScatterResult scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered) {
+    public ScatterResult scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered, Random rand) {
         fuzz = fuzz < 1 ? fuzz : 1; //set to 1 if bigger
         Vector reflected = in.getDirection().getUnitVector().reflect(rec.getNormal());
-        scattered = new Ray(rec.getPos(), Vector.getRandomInUnitSphere().multiply(fuzz).add(reflected));
+        scattered = new Ray(rec.getPos(), Vector.getRandomInUnitSphere(rand).multiply(fuzz).add(reflected));
         attenuation = albedo;
         return new ScatterResult(scattered.getDirection().dot(rec.getNormal()) > 0, scattered, attenuation);
     }

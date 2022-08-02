@@ -2,7 +2,6 @@ package me.second2050.raytracer;
 
 import java.io.*;
 import java.text.DecimalFormat;
-import java.util.Random;
 
 import javax.swing.text.NumberFormatter;
 
@@ -16,7 +15,6 @@ class RaytracerMain {
     static final double CAMERA_FOCAL_LENGTH = 1.0;
     static final int CAMERA_FIELD_OF_VIEW = 45;
     static final int MAX_DEPTH = 50;
-    public static final Random RAND = new Random();
 
     public static void main(String[] args) {
         // open file
@@ -75,7 +73,7 @@ class RaytracerMain {
         // render image
         output.printf("P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT); // write file header
         System.out.printf("\n");
-        Renderer[] renderers = new Renderer[1];
+        Renderer[] renderers = new Renderer[8];
         int start = IMAGE_HEIGHT - 1;
         int end = IMAGE_HEIGHT - (IMAGE_HEIGHT / renderers.length);
         for (int i = 0; i < renderers.length; i++) {

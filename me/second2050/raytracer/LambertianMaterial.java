@@ -1,5 +1,7 @@
 package me.second2050.raytracer;
 
+import java.util.Random;
+
 public class LambertianMaterial extends Material {
     Color albedo;
 
@@ -13,8 +15,8 @@ public class LambertianMaterial extends Material {
     }
 
     @Override
-    public ScatterResult scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered) {
-        Vector scatterDirection = rec.getNormal().add(Vector.getRandomUnitVector());
+    public ScatterResult scatter(Ray in, HitRecord rec, Color attenuation, Ray scattered, Random rand) {
+        Vector scatterDirection = rec.getNormal().add(Vector.getRandomUnitVector(rand));
 
         // catch degenerate scatter direction
         if (scatterDirection.nearZero()) { scatterDirection = rec.getNormal(); }
