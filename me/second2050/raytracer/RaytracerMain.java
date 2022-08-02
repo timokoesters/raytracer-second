@@ -9,7 +9,7 @@ import javax.swing.text.NumberFormatter;
 class RaytracerMain {
     // global variables
     static final double IMAGE_ASPECT_RATIO = 16.0/9.0; // without decimal place it will be 1
-    static final int IMAGE_WIDTH = 320;
+    static final int IMAGE_WIDTH = 480;
     static final int IMAGE_HEIGHT = (int)(IMAGE_WIDTH / IMAGE_ASPECT_RATIO);
     static final String OUTPUT_FILE_NAME = "output.ppm";
     static final int SAMPLES_PER_PIXEL = 50;
@@ -69,30 +69,30 @@ class RaytracerMain {
         // setup camera
         Camera cam = new Camera(new Vector(-2, 2, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), IMAGE_ASPECT_RATIO, 2.0, CAMERA_FIELD_OF_VIEW, CAMERA_FOCAL_LENGTH);
 
-        // setup rng for antialiasing
-        Random rand = new Random();
-
         // start rendering timer
         long startTime = System.currentTimeMillis();
 
         // render image
         output.printf("P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT); // write file header
         System.out.printf("\n");
-        Renderer[] renderers = new Renderer[2];
+        Renderer[] renderers = new Renderer[1];
+        int start = IMAGE_HEIGHT - 1;
+        int end = IMAGE_HEIGHT - (IMAGE_HEIGHT / renderers.length);
         for (int i = 0; i < renderers.length; i++) {
-            renderers[i] = new Renderer(100, 120);
+            renderers[i] = new Renderer(start, end, cam, world);
             renderers[i].start();
+            start = end - 1;
+            end = end - (IMAGE_HEIGHT / renderers.length);
         }
         for (int i = 0; i < renderers.length; i++) {
             try {
                 renderers[i].join();
             } catch (Exception e) {
-                e.printStacktrace();
+                e.printStackTrace();
                 System.exit(100);
             }
             output.printf("%s", renderers[i].getResult());
         }
-
 
         // output runtime to user
         long endTime = System.currentTimeMillis();
@@ -101,28 +101,5 @@ class RaytracerMain {
         output.flush();
         output.close(); // close file to ensure correct writing to storage
         return;
-    }
-
-    private static Color getRayColor(Ray r, Hittable object, int depth) {
-        HitRecord rec = object.hit(r, 0.001, Utility.INFINITY);
-
-        if (depth <= 0) { return new Color(0, 0, 0); }
-
-        if (rec.gotHit()) {
-            Ray scattered = null;
-            Color attenuation = new Color(1, 1, 1);
-            ScatterResult scatterResult = rec.getMaterial().scatter(r, rec, attenuation, scattered);
-            if (scatterResult.result) {
-                scattered = scatterResult.scattered;
-                attenuation = scatterResult.attenuation;
-                return attenuation.multiply(getRayColor(scattered, object, depth-1)).toColor();
-            }
-            return new Color(0, 0, 0);
-        }
-
-        Vector direction = r.getDirection();
-        double t = 0.5 * (direction.getY() + 1.0);
-        Vector result = (Vector.getNew(1.0,1.0,1.0).multiply(1.0 - t)).add((Vector.getNew(0.5, 0.7, 1.0)).multiply(t));
-        return result.toColor();
     }
 }
